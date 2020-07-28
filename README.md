@@ -16,6 +16,8 @@ newman run OtusArchIdempotancy-KlimenkoOleg.postman_collection.json
 Ключ записывается в базу платежей в отдельную колонку. При каждом запросе проверяется в БД (поиск по ключу идемпотентности) - был ли уже такой для ранее принятых платежей. Если был - платеж отклоняется. 
 
 
+Архиектура решения
+
 Ouath server microservice:  https://github.com/klimenkoOleg/spring-oauth-server
 
 API Gateway Zuul: https://github.com/klimenkoOleg/zuul-oauth2
