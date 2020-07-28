@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "20c5006f-1685-4534-bf39-029a4042633c",
+		"name": "OtusArchIdempotancy-KlimenkoOleg",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e85208bd-10c7-42a9-b3ea-4982a3218dd2",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.collectionVariables.set(\"userId\", responseJSON[\"userId\"])",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bb4c7148-c054-4400-8633-8d041cecf33e",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;",
+							"pm.collectionVariables.set(\"user1_suffix\", Math.random().toString(36).substring(5));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"type": "text",
+						"value": "no-cache"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"{{userName}}_{{user1_suffix}}\",\n\t\"password\": \"{{password}}_{{user1_suffix}}\",\n\t\"email\": \"{{email}}_{{user1_suffix}}\",\n\t\"name\": \"{{name}}_{{user1_suffix}}\",\n\t\"department\": \"{{department}}_{{user1_suffix}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorize",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb7ab821-55e3-4359-af5a-0da05345e228",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.environment.unset(\"authToken\");",
+							"pm.collectionVariables.set(\"authToken\", responseJSON[\"access_token\"])",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dd710692-c84c-4a1f-9e2d-aa480fc5e425",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "fooClientIdPassword",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{userName}}_{{user1_suffix}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}_{{user1_suffix}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/oauth/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create payment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f2887fa8-556a-468d-bd37-c274e14dd00d",
+						"exec": [
+							"var uuid = require('uuid');",
+							"pm.environment.unset('use_case_guid');",
+							"pm.collectionVariables.unset('use_case_guid');",
+							"pm.collectionVariables.set('use_case_guid', uuid.v4());",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "idempotanceKey",
+						"value": "{{use_case_guid}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientId\": 1,\n    \"serviceId\":  2,\n    \"amount\": 10.50,\n    \"comment\": \"in God we trust\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment/payment/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment",
+						"payment",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Repeat payment with same idempotency key - shold be error",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "idempotanceKey",
+						"type": "text",
+						"value": "{{use_case_guid}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientId\": 1,\n    \"serviceId\":  2,\n    \"amount\": 10.50,\n    \"comment\": \"in God we trust\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment/payment/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment",
+						"payment",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e48ea466-55da-4f64-8aeb-436ca2df08d3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b9120b35-9f49-4f63-a92e-bf19d7e3cbaf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "77f30d89-49e6-495c-bc1a-1e045183f548",
+			"key": "baseUrl",
+			"value": "arch.homework"
+		},
+		{
+			"id": "b8ec70fa-7ae8-44d8-9bdb-13e92d63c436",
+			"key": "user1_suffix",
+			"value": "th06uzll"
+		},
+		{
+			"id": "0d853f47-ff78-411f-be5b-07c61abe7f84",
+			"key": "userId",
+			"value": 3
+		},
+		{
+			"id": "f4848a3b-5977-4130-9335-d1579be02a09",
+			"key": "authToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTU5NTA2NzQsInVzZXJfbmFtZSI6InRlc3RVc2VyX3RoMDZ1emxsIiwiYXV0aG9yaXRpZXMiOlsiQURNSU4iXSwianRpIjoiODg5OTMyZGUtNGRhOC00MmQ0LThjYjktMzk5NWFmMjk0NzZjIiwiY2xpZW50X2lkIjoiZm9vQ2xpZW50SWRQYXNzd29yZCIsInNjb3BlIjpbImZvbyIsInJlYWQiLCJ3cml0ZSJdfQ.TeiJPy04WHvIo45tS04bavV61FDQacGntbfjoJmaKdw"
+		},
+		{
+			"id": "b0ee9177-bc42-4295-88a8-a12c18fa406a",
+			"key": "use_case_guid",
+			"value": "a72e111d-e30e-47fa-b13e-086252d2cc90"
+		},
+		{
+			"id": "681804ea-8e3c-474f-8c6e-25315cc74bf1",
+			"key": "userName",
+			"value": "testUser"
+		},
+		{
+			"id": "7528ff57-cdfe-43e6-bdcb-c34b707223d1",
+			"key": "password",
+			"value": "pass"
+		},
+		{
+			"id": "23c743e3-0c68-4921-8fc6-f2c12f30683d",
+			"key": "email",
+			"value": "oklimenko@gmail.com"
+		},
+		{
+			"id": "a5ee2fd3-fae6-4b15-b3ee-29bac7797f61",
+			"key": "name",
+			"value": "Oleg Klimenko_"
+		},
+		{
+			"id": "eec403b8-c721-4e24-9d57-2817eb49dfa4",
+			"key": "department",
+			"value": "IT_department"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
