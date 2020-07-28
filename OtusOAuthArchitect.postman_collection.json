@@ -1,0 +1,826 @@
+{
+	"info": {
+		"_postman_id": "c7ee70ed-7b5d-48f4-b9c3-c44549910e80",
+		"name": "OtusOAuthArchitect",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42480bf7-e042-4113-bdfd-e420a23d6921",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.collectionVariables.set(\"userId\", responseJSON[\"userId\"])",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c15adfe6-3a9f-4fe0-95de-9a35f6ee95e2",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;",
+							"pm.collectionVariables.set(\"user1_suffix\", Math.random().toString(36).substring(5));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"type": "text",
+						"value": "no-cache"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\"userName\": \"{{userName}}_{{user1_suffix}}\", \n\t\"password\": \"{{password}}_{{user1_suffix}}\", \n\t\"email\": \"{{email}}_{{user1_suffix}}\",\n\t\"name\": \"{{name}}_{{user1_suffix}}\",\n\t\"department\": \"{{department}}_{{user1_suffix}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change profile unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f42da79-3f16-4323-beab-c3ad7877df1c",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9f649aaa-9108-48cb-8a19-8fdf5221d4fc",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\"id\": \"{{userId}}\",\n\t\"userName\": \"{{userName}}_{{user1_suffix}}_changed\", \n\t\"email\": \"{{userName}}_{{user1_suffix}}_changed\",\n\t\"name\": \"{{userName}}_{{user1_suffix}}_changed\",\n\t\"department\": \"{{userName}}_{{user1_suffix}}_changed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/edit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorize",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "124d373a-a04b-4ffb-8d2e-1aaafeaf92ce",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.environment.unset(\"authToken\");",
+							"pm.collectionVariables.set(\"authToken\", responseJSON[\"access_token\"])",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1c1e8c92-a1d3-4710-abfa-c556c48806a8",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "fooClientIdPassword",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{userName}}_{{user1_suffix}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}_{{user1_suffix}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/oauth/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change profile authorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e25a059-b7c2-458d-b0f2-15dd9af250fc",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b3746b37-21be-4c00-9d7c-23227608b246",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"type": "text",
+						"value": "no-cache"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\"id\": \"{{userId}}\",\n\t\"email\": \"{{userName}}_{{user1_suffix}}_changed\",\n\t\"name\": \"{{userName}}_{{user1_suffix}}_changed\",\n\t\"department\": \"{{userName}}_{{user1_suffix}}_changed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/edit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check profile changed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c35f0463-f088-45d0-8db2-1e5a89f6dfef",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ec1666dc-0b07-4f92-b2ea-c7e07b0c6fd2",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Cache-Control",
+						"value": "none",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/extra?userId={{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"extra"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4a179092-46df-491d-91ef-72b98de41e1d",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "acf14466-7f7c-43fb-9962-b5437b48ae25",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/profile/oauth/token/revokeById/{{authToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"oauth",
+						"token",
+						"revokeById",
+						"{{authToken}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register new user 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7ea20599-106d-4f39-b003-157e844169ae",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.collectionVariables.set(\"userId2\", responseJSON[\"userId\"])",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "41164cca-d6b6-4cb8-9b44-ba9a38c114ec",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;",
+							"",
+							"pm.collectionVariables.set(\"user2_suffix\", Math.random().toString(36).substring(5));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\"userName\": \"{{userName}}_{{user2_suffix}}\", \n\t\"password\": \"{{password}}_{{user2_suffix}}\", \n\t\"email\": \"{{email}}_{{user2_suffix}}\",\n\t\"name\": \"{{name2}}_{{user2_suffix}}\",\n\t\"department\": \"{{department2}}_{{user2_suffix}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorize user 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dbfaf031-4b33-4773-bf86-72c979362e0a",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							"",
+							"var responseJSON = JSON.parse(responseBody)",
+							"pm.environment.unset(\"authToken2\");",
+							"pm.collectionVariables.set(\"authToken2\", responseJSON[\"access_token\"])",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d43bc7d5-4351-4a41-9049-8a88f681fb45",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "fooClientIdPassword",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "no-cache",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{userName}}_{{user2_suffix}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}_{{user2_suffix}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/profile/oauth/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check profile for User1 using User2 JWT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4395fb11-cf62-44d4-bfe6-904d92320a75",
+						"exec": [
+							"tests[\"[INFO] Response Headers: \" + JSON.stringify(pm.response.headers.all())] = true;",
+							"tests[\"[INFO] Response Body: \" + JSON.stringify(responseBody)] = true;",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fe6ed9a4-ecff-4bfc-a7bf-2cea315174a8",
+						"exec": [
+							"tests[\"[INFO] Request header: \" + JSON.stringify(request.headers)] = true;",
+							"tests[\"[INFO] Request Body: \" + JSON.stringify(request.data)] = true;",
+							"tests[\"[INFO] Request Url: \" + JSON.stringify(request.url)] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Accept-Encoding",
+						"type": "text",
+						"value": "gzip, deflate",
+						"disabled": true
+					},
+					{
+						"key": "Cache-Control",
+						"type": "text",
+						"value": "none"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{authToken2}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/profile/user/extra?userId={{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile",
+						"user",
+						"extra"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "bdd08314-62d4-48ad-8002-ead777d546be",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f339a262-e785-4b6e-a42f-05c7f714f9c1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "cffa5394-0b64-47cd-a0bb-4600357d42a3",
+			"key": "userName",
+			"value": "testUser",
+			"type": "string"
+		},
+		{
+			"id": "5a01d844-48d9-4ccf-8044-d255feb12d80",
+			"key": "password",
+			"value": "pass123",
+			"type": "string"
+		},
+		{
+			"id": "511eaa51-f6ac-42de-b8f5-caa34477cb2f",
+			"key": "email",
+			"value": "oklimenko@gmail.com",
+			"type": "string"
+		},
+		{
+			"id": "4338b2e6-d66b-4dff-bf0d-b6a37ceba45c",
+			"key": "department",
+			"value": "RnD department",
+			"type": "string"
+		},
+		{
+			"id": "f46fbebc-d4b5-48ba-bda2-746f2799907b",
+			"key": "userId",
+			"value": 1,
+			"type": "number"
+		},
+		{
+			"id": "8a857898-5d59-4166-8cb5-6995467b8221",
+			"key": "name",
+			"value": "Oleg Klimenko",
+			"type": "string"
+		},
+		{
+			"id": "3c187821-b716-49d9-9d3b-51b7130a0e12",
+			"key": "authToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTA5NTQzNTMsInVzZXJfbmFtZSI6InRlc3RVc2VyX3p3dnBuaWFxIiwiYXV0aG9yaXRpZXMiOlsiQURNSU4iXSwianRpIjoiMTU1MTJhOTgtZDkwMC00NzU0LWI4MjEtM2JkZTMxZDRjODU2IiwiY2xpZW50X2lkIjoiZm9vQ2xpZW50SWRQYXNzd29yZCIsInNjb3BlIjpbImZvbyIsInJlYWQiLCJ3cml0ZSJdfQ.llRXEgsvY_Pps_NHi36NKMwUwu2N7WhPbS0rAq8zGRk",
+			"type": "string"
+		},
+		{
+			"id": "20121368-42b9-4aef-a989-30ba644692b5",
+			"key": "userId2",
+			"value": 2,
+			"type": "number"
+		},
+		{
+			"id": "0d3660a6-c0ba-4bcb-8c6e-ec1a2078bf86",
+			"key": "authToken2",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTA5NTQ0MTMsInVzZXJfbmFtZSI6InRlc3RVc2VyX2U0aWtmMjlvIiwiYXV0aG9yaXRpZXMiOlsiQURNSU4iXSwianRpIjoiNmM5MzRlZDMtYTIyMy00MjhkLTlhZWEtNThhY2M4NTkxMzJlIiwiY2xpZW50X2lkIjoiZm9vQ2xpZW50SWRQYXNzd29yZCIsInNjb3BlIjpbImZvbyIsInJlYWQiLCJ3cml0ZSJdfQ.Lx94rTTg6kcPklivpmOZdA2-bc5brLDQ-ATSYfpRVu0",
+			"type": "string"
+		},
+		{
+			"id": "e3fdd436-d64d-4d06-8507-929966f4e398",
+			"key": "baseUrl",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "ec6b55df-2833-4955-9838-167f2fad72f8",
+			"key": "user1_suffix",
+			"value": "zwvpniaq",
+			"type": "string"
+		},
+		{
+			"id": "7c026a25-223a-4104-96de-8c2b3ad4121c",
+			"key": "user2_suffix",
+			"value": "e4ikf29o",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

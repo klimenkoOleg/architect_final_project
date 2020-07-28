@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hello-chart.fullname" . }}-auth-server
+  labels:
+    {{- include "hello-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8081
+      targetPort: http-auth
+      protocol: TCP
+      name: web-auth-server
+  selector:
+    {{- include "hello-chart.selectorLabels" . | nindent 4 }}-auth-server
