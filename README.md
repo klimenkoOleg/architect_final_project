@@ -1,5 +1,16 @@
 # architect_final_project
 
+Установка 
+
+1) Установка в любой namespace командой - использует helm
+./install.sh 
+2) Деинсталляция - командой ./uninstall.sh
+3) Выполнение тестов - можно использовать экспортированную коллекцию:
+
+newman run OtusArchIdempotancy-KlimenkoOleg.postman_collection.json
+
+
+
 Ouath server microservice:  https://github.com/klimenkoOleg/spring-oauth-server
 
 API Gateway Zuul: https://github.com/klimenkoOleg/zuul-oauth2
