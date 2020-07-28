@@ -1,6 +1,8 @@
 # architect_final_project
 
-
+Ouath server microservice:  https://github.com/klimenkoOleg/spring-oauth-server
+API Gateway Zuul: https://github.com/klimenkoOleg/zuul-oauth2
+Payment microservice: https://github.com/klimenkoOleg/otus-task9-idempotent-method
 
 
 
