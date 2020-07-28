@@ -10,6 +10,11 @@
 newman run OtusArchIdempotancy-KlimenkoOleg.postman_collection.json
 
 
+Описание
+
+Реализован идемпотентный платеж в микросевисе PAYMENT - передается генерируемый клиентом ключ идемпотентности, в заголовке idempotanceKey, в формате UUID.
+Ключ записывается в базу платежей в отдельную колонку. При каждом запросе проверяется в БД (поиск по ключу идемпотентности) - был ли уже такой для ранее принятых платежей. Если был - платеж отклоняется. 
+
 
 Ouath server microservice:  https://github.com/klimenkoOleg/spring-oauth-server
 
