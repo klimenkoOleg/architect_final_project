@@ -15,6 +15,11 @@ image_auth_server:
 image_payment:
   repository: oklimenko/payment
   tag: 1.0.7
+
+image_zookeeper:
+  repository: debezium/zookeeper
+  tag: 1.2
+
   #  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart version.
 #  tag: ""

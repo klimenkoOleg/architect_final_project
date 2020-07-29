@@ -24,8 +24,14 @@ appVersion: 0.6.0
 
 dependencies:
   - name: postgresql
-    version: 8.x.x
+    version: 8.9.4
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
     tags:
       - myapp-database
+  - name: kafka
+    version: 11.6.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: kafka.enabled
+    tags:
+      - myapp-kafka
