@@ -27,3 +27,15 @@ Payment microservice: https://github.com/klimenkoOleg/otus-task9-idempotent-meth
 
 
 ![Architecture](https://github.com/klimenkoOleg/architect_final_project/blob/master/OTUS%20Architecture%20training%20-%20Idempotancy%20lesson.png?raw=true)
+
+
+To start and configure minikube:
+minikube start
+minikube docker-env
+eval $(minikube -p minikube docker-env)
+
+
+
+Useful commands:
+To check Kafka topic content (topic named payment2)
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic payment2
