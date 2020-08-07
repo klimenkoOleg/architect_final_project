@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hello-chart.fullname" . }}-auth-server
+  name: {{ include "hello-chart.fullname" . }}-zookeeper
   labels:
     {{- include "hello-chart.labels" . | nindent 4 }}
 spec:
@@ -12,21 +12,17 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "hello-chart.selectorLabels" . | nindent 6 }}-auth-server
+      {{- include "hello-chart.selectorLabels" . | nindent 6 }}-zookeeper
   template:
     metadata:
       labels:
-        {{- include "hello-chart.selectorLabels" . | nindent 8 }}-auth-server
+        {{- include "hello-chart.selectorLabels" . | nindent 8 }}-zookeeper
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
     spec:
-      initContainers:  # check if DB is ready, and only continue when true
-        - name: check-db-ready
-          image: postgres:9.6.5
-          command: ['sh', '-c',  'until pg_isready -h myapp-postgresql -p 5432;  do echo waiting for database; sleep 2; done;']
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image_auth_server.repository }}:{{ .Values.image_auth_server.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image_payment.repository }}:{{ .Values.image_payment.tag | default .Chart.AppVersion }}"
           env:
             - name: DATABASE_URI
               valueFrom:
@@ -52,8 +48,8 @@ spec:
                   name: hello-config
                   key: GREETING
           ports:
-            - name: http-auth
-              containerPort: 8081
+            - name: http-zookeeper
+              containerPort: 2181
               protocol: TCP
 #          livenessProbe:
 #            httpGet:

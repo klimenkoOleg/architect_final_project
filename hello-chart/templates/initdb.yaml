@@ -18,10 +18,12 @@ spec:
             - sh
             - "-c"
             - |
-              sleep 30 && {{ printf "psql postgres://%s:%s@%s/%s" .Values.externalPostgresql.postgresqlUsername .Values.externalPostgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.externalPostgresql.postgresqlDatabase }} <<'EOF'
+              until pg_isready -h myapp-postgresql -p 5432 -d myapp -U myuser;  do echo waiting for database; sleep 2; done && {{ printf "psql postgres://%s:%s@%s/%s" .Values.externalPostgresql.postgresqlUsername .Values.externalPostgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.externalPostgresql.postgresqlDatabase }} <<'EOF'
                 -- DROP SCHEMA payment;
 
                 CREATE SCHEMA payment AUTHORIZATION myuser;
+                CREATE SCHEMA payment2 AUTHORIZATION myuser;
+
 
                 CREATE SEQUENCE user_seq minvalue 1;
 

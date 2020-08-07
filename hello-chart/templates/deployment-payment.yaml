@@ -20,6 +20,10 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
     spec:
+      initContainers:  # check if DB is ready, and only continue when true
+        - name: check-db-ready
+          image: postgres:9.6.5
+          command: ['sh', '-c',  'until pg_isready -h myapp-postgresql -p 5432;  do echo waiting for database; sleep 2; done;']
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image_payment.repository }}:{{ .Values.image_payment.tag | default .Chart.AppVersion }}"
