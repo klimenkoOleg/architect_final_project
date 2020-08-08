@@ -24,6 +24,9 @@ spec:
         - name: check-db-ready
           image: postgres:9.6.5
           command: ['sh', '-c',  'until pg_isready -h myapp-postgresql -p 5432;  do echo waiting for database; sleep 2; done;']
+        - name: check-kafka-ready
+          image: busybox:latest
+          command: ['sh', '-c',  'until nc -z -w2 -v myapp-kafka 9092; do sleep 2s; done; ']
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image_payment.repository }}:{{ .Values.image_payment.tag | default .Chart.AppVersion }}"
