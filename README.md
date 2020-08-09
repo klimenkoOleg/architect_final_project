@@ -1,5 +1,16 @@
 # architect_final_project
 
+Prerequisite
+1. Install Prometheus
+Go to install-kuber-manual
+minikube addons disable ingress
+kubectl create namespace monitoring
+kubectl config set-context --current --namespace=monitoring
+helm install prom stable/prometheus-operator -f prometheus.yaml --atomic
+helm install nginx stable/nginx-ingress -f nginx-ingress.yaml --atomic
+
+
+
 Установка 
 
 1) Установка в любой namespace командой - использует helm
