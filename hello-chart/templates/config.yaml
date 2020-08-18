@@ -5,6 +5,14 @@ metadata:
 data:
   GREETING: Bonjour
 #  DATABASE_URI: jdbc:postgresql://postgres:5432/docker-spring
+  CACHE_ENABLED: "0"
+  #  DATABASE_URI: jdbc:postgresql://localhost:5432/postgres?currentSchema=products
+  #  DATABASE_PASSWORD: postgres
+  REDIS_HOST: myapp-cache-chart-redis
+  REDIS_PORT: "6379"
+  redis_config: |+
+    maxmemory 2mb
+    maxmemory-policy allkeys-lru
 ---
 apiVersion: v1
 kind: Secret
@@ -13,7 +21,7 @@ metadata:
 type: Opaque
 data:
   DATABASE_PASSWORD: {{ printf "%s" .Values.externalPostgresql.postgresqlPassword | b64enc }}
-#  DATABASE_PASSWORD: cGFzc3dk
+#  DATABASE_PASSWORD: cGFzc3dk22
   DATABASE_USER: {{ printf "%s" .Values.externalPostgresql.postgresqlUsername | b64enc }}
-#  DATABASE_USER: bXl1c2Vy
+#  DATABASE_USER: bXl1c2Vy22
   DATABASE_URI: {{ printf "jdbc:postgresql://%s:%s/%s" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.externalPostgresql.postgresqlDatabase  | b64enc | quote }}

@@ -1,0 +1,39 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "hello-chart.fullname" . }}-2
+  labels:
+    {{- include "hello-chart.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ include "hello-chart.fullname" . }}
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hello-chart
+#    - myapp-hello-chart
+#    - myapp-hello-chart-processing
+#    - myapp-hello-chart-pay-sys
+#    - myapp-hello-chart-payment
+  endpoints:
+  - interval: 15s
+    port: web
+    path: /actuator/prometheus
+  - interval: 15s
+    port: web-processing
+    path: /actuator/prometheus
+  - interval: 15s
+    port: web-pay-sys
+    path: /actuator/prometheus
+  - interval: 15s
+    port: web-payment
+    path: /actuator/prometheus
+  - interval: 15s
+    port: web-gateway
+    path: /actuator/prometheus
+  - interval: 15s
+    port: web-auth-server
+    path: /actuator/prometheus
+{{- end }}

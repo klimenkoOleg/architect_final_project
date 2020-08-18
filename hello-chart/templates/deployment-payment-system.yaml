@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hello-chart.fullname" . }}-payment
+  name: {{ include "hello-chart.fullname" . }}-pay-sys
   labels:
     {{- include "hello-chart.labels" . | nindent 4 }}
 spec:
@@ -12,11 +12,11 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "hello-chart.selectorLabels" . | nindent 6 }}-payment
+      {{- include "hello-chart.selectorLabels" . | nindent 6 }}-pay-sys
   template:
     metadata:
       labels:
-        {{- include "hello-chart.selectorLabels" . | nindent 8 }}-payment
+        {{- include "hello-chart.selectorLabels" . | nindent 8 }}-pay-sys
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
     spec:
@@ -29,7 +29,7 @@ spec:
           command: ['sh', '-c',  'until nc -z -w2 -v myapp-kafka 9092; do sleep 2s; done; ']
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image_payment.repository }}:{{ .Values.image_payment.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image_payment_system.repository }}:{{ .Values.image_payment_system.tag | default .Chart.AppVersion }}"
           imagePullPolicy: Never
           env:
             - name: DATABASE_URI
@@ -56,7 +56,7 @@ spec:
                   name: hello-config
                   key: GREETING
           ports:
-            - name: http-payment
+            - name: http-pay-sys
               containerPort: 8081
               protocol: TCP
 #          livenessProbe:

@@ -20,9 +20,26 @@ spec:
             - |
               until pg_isready -h myapp-postgresql -p 5432 -d myapp -U myuser;  do echo waiting for database; sleep 2; done && {{ printf "psql postgres://%s:%s@%s/%s" .Values.externalPostgresql.postgresqlUsername .Values.externalPostgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.externalPostgresql.postgresqlDatabase }} <<'EOF'
                 -- DROP SCHEMA payment;
+              SELECT pg_catalog.set_config('search_path', 'public', false);
+              grant usage on schema public to public;
+              grant create on schema public to public;
+              GRANT ALL PRIVILEGES ON DATABASE "myapp" to myuser;
+
 
                 CREATE SCHEMA payment AUTHORIZATION myuser;
                 CREATE SCHEMA payment2 AUTHORIZATION myuser;
+                CREATE SCHEMA auth1 AUTHORIZATION myuser;
+
+                grant usage on schema payment to myuser;
+                grant create on schema payment to myuser;
+                grant usage on schema payment2 to myuser;
+                grant create on schema payment2 to myuser;
+                grant usage on schema auth1 to myuser;
+                grant create on schema auth1 to myuser;
+
+              GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA payment TO myuser;
+              GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA payment2 TO myuser;
+              GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA auth1 TO myuser;
 
 
                 CREATE SEQUENCE user_seq minvalue 1;

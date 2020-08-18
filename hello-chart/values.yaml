@@ -6,19 +6,31 @@ replicaCount: 1
 
 image_gateway:
   repository: oklimenko/api-gateway-zuul
-  tag: 0.9.0
+  tag: 0.12.0
 
 image_auth_server:
   repository: oklimenko/api-oauth-server
-  tag: 0.3.0
+  tag: 0.5.0
 
 image_payment:
   repository: oklimenko/payment
-  tag: 1.0.7
+  tag: 1.0.12
 
-image_zookeeper:
-  repository: debezium/zookeeper
-  tag: 1.2
+#image_zookeeper:
+#  repository: debezium/zookeeper
+#  tag: 1.2
+
+image_processing:
+  repository: oklimenko/processing
+  tag: 1.0.16
+
+image_payment_system:
+  repository: oklimenko/payment-system
+  tag: 1.0.4
+
+image_redis:
+  repository: redis
+  tag: alpine3.12
 
   #  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart version.
@@ -112,6 +124,10 @@ postgresql:
   postgresqlUsername: myuser
   postgresqlPassword: passwd
   postgresqlDatabase: myapp
+#  postgresqlPostgresPassword: pass1
+#  global:
+#    postgresql:
+#      postgresqlPassword: pass1
   service:
     port: "5432"
 

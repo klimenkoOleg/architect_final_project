@@ -30,4 +30,9 @@ spec:
 #              serviceName: myapp-hello-chart-payment
               servicePort: 8080
 #              servicePort: 8081
+          - path: /processing($|/)(.*)
+            backend:
+              serviceName: myapp-hello-chart-gateway
+              #              serviceName: myapp-hello-chart-payment
+              servicePort: 8080
 {{- end }}

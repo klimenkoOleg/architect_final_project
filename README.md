@@ -8,8 +8,15 @@ kubectl create namespace monitoring
 kubectl config set-context --current --namespace=monitoring
 helm install prom stable/prometheus-operator -f prometheus.yaml --atomic
 helm install nginx stable/nginx-ingress -f nginx-ingress.yaml --atomic
+Run Grafana:
+kubectl port-forward -n monitoring service/prom-grafana 9000:80
+user: admin password: prom-operator
 
+Run Prometheus:
+kubectl port-forward -n monitoring service/prom-prometheus-operator-prometheus 9090
 
+Port froward for DB:
+kubectl port-forward -n default service/myapp-postgresql 5555:5432
 
 Установка 
 
