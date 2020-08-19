@@ -30,7 +30,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image_processing.repository }}:{{ .Values.image_processing.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           env:
             - name: DATABASE_URI
               valueFrom:
