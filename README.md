@@ -1,26 +1,26 @@
 # architect_final_project
 
 
-#Установка 
+# Установка 
 
 1) Установка в любой namespace командой - использует helm
 ./install.sh 
 2) Деинсталляция - командой ./uninstall.sh
 
 
-#Описание
+# Описание
 
 Находтся в saga-lesson/SAGA.pdf
 
 
 
-#есты 
+# Тесты 
 
 Находят в saga-lesson/OtusArch-KlimenkoOleg.postman_collection.json (запускать сверху вниз - последовательно)
 
 
 
-#Комопненты
+# Комопненты
 
 Ouath server microservice:  https://github.com/klimenkoOleg/spring-oauth-server
 
